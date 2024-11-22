@@ -12,9 +12,27 @@ interface Props {
   email: string;
 }
 
+// Function to generate a consistent color based on a string
+const generateColorFromString = (inputString: any) => {
+  let hash = 0;
+  for (let i = 0; i < inputString.length; i++) {
+    hash = inputString.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let color = "#";
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += ("00" + value.toString(16)).slice(-2);
+  }
+  return color;
+};
+
 const Sidebar = ({ fullName, avatar, email }: Props) => {
   const pathname = usePathname();
 
+    // Use email or fullName to generate a consistent color
+    const colorSource = email || fullName || "default";
+    const consistentColor = generateColorFromString(colorSource);
+  
   return (
     <aside className="sidebar">
       <Link href="/">
@@ -71,13 +89,22 @@ const Sidebar = ({ fullName, avatar, email }: Props) => {
       />
 
       <div className="sidebar-user-info">
-        <Image
-          src={avatar}
-          alt="Avatar"
-          width={44}
-          height={44}
-          className="sidebar-user-avatar"
-        />
+      <div
+        className="sidebar-user-avatar flex items-center justify-center rounded-full text-white font-bold uppercase"
+        style={{
+          backgroundColor: consistentColor,
+          width: "44px",
+          height: "44px",
+        }}
+      >
+        {fullName
+          ? fullName
+              .split(" ")
+              .map((name) => name[0])
+              .join("")
+          : "?"}
+      </div>
+     
         <div className="hidden lg:block">
           <p className="subtitle-2 capitalize">{fullName}</p>
           <p className="caption">{email}</p>

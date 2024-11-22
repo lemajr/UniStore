@@ -20,6 +20,16 @@ const getUserByEmail = async (email: string) => {
   return result.total > 0 ? result.documents[0] : null;
 };
 
+function generateRandomColor() {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+
 const handleError = (error: unknown, message: string) => {
   console.log(error, message);
   throw error;
@@ -51,6 +61,8 @@ export const createAccount = async ({
 
   if (!existingUser) {
     const { databases } = await createAdminClient();
+
+    const avatarColor = generateRandomColor();
 
     await databases.createDocument(
       appwriteConfig.databaseId,

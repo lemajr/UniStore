@@ -25,6 +25,24 @@ interface Props {
   email: string;
 }
 
+
+// Function to generate a consistent color based on a string (e.g., email or fullName)
+const generateColorFromString = (inputString: any) => {
+  let hash = 0;
+  for (let i = 0; i < inputString.length; i++) {
+    hash = inputString.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let color = "#";
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += ("00" + value.toString(16)).slice(-2);
+  }
+  return color;
+};
+
+
+
+
 const MobileNavigation = ({
   $id: ownerId,
   accountId,
@@ -35,6 +53,10 @@ const MobileNavigation = ({
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
+
+  // Use email or fullName to generate a consistent color
+  const colorSource = email || fullName || "default";
+  const consistentColor = generateColorFromString(colorSource);
   return (
     <header className="mobile-header">
       <Image
@@ -56,19 +78,28 @@ const MobileNavigation = ({
         </SheetTrigger>
         <SheetContent className="shad-sheet h-screen px-3">
           <SheetTitle>
-            <div className="header-user">
-              <Image
-                src={avatar}
-                alt="avatar"
-                width={44}
-                height={44}
-                className="header-user-avatar"
-              />
-              <div className="sm:hidden lg:block">
+            <div className="header-user flex items-center">
+              <div
+                className="header-user-avatar flex items-center justify-center rounded-full text-white font-bold uppercase"
+                style={{
+                  backgroundColor: consistentColor,
+                  width: "44px",
+                  height: "44px",
+                }}
+              >
+                {fullName
+                  ? fullName
+                    .split(" ")
+                    .map((name) => name[0])
+                    .join("")
+                  : "?"}
+              </div>
+              <div className="ml-4 sm:hidden lg:block">
                 <p className="subtitle-2 capitalize">{fullName}</p>
                 <p className="caption">{email}</p>
               </div>
             </div>
+
             <Separator className="mb-4 bg-light-200/20" />
           </SheetTitle>
 

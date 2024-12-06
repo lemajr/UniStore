@@ -1,6 +1,3 @@
-"use client";
-import { motion } from "framer-motion";
-import { LampContainer } from "@/components/ui/lamp";
 import Image from "next/image";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -13,7 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             alt="logo"
             width={224}
             height={82}
-            className="h-12 w-auto"
+            className="h-12 w-[224px]"
           />
         </div>
         {children}

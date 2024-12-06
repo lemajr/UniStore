@@ -13,15 +13,11 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
   const types = getFileTypesParams(type) as FileType[];
 
   const files = await getFiles({ types, searchText, sort });
-  
-   // Fetch total space used
-   const totalSpace = await getTotalSpaceUsed();
-  
-   console.log("Type:", type);
-   console.log("Total Space Data:", totalSpace);
 
+  const totalSpace = await getTotalSpaceUsed();
+  
 
-    // Calculate total size for the specific type or all files
+  // Calculate total size for the specific type or all files
   let totalForType = 0;
 
   if (types && types.length > 0) {
@@ -30,7 +26,6 @@ const Page = async ({ searchParams, params }: SearchParamProps) => {
       return acc + (totalSpace[currentType]?.size || 0);
     }, 0);
   } else {
-    // If type is not specified or not valid, use the total space used
     totalForType = totalSpace.used;
   }
 

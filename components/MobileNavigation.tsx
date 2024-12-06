@@ -41,8 +41,6 @@ const generateColorFromString = (inputString: any) => {
 };
 
 
-
-
 const MobileNavigation = ({
   $id: ownerId,
   accountId,
@@ -58,12 +56,12 @@ const MobileNavigation = ({
   const colorSource = email || fullName || "default";
   const consistentColor = generateColorFromString(colorSource);
   return (
-    <header className="mobile-header">
+    <header className="py-2 mobile-header">
       <Image
-        src="/assets/icons/logo-full-brand.svg"
+        src="/small-logo.png"
         alt="logo"
-        width={120}
-        height={52}
+        width={50}
+        height={20}
         className="h-auto"
       />
 

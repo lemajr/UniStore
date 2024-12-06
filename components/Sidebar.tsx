@@ -37,15 +37,15 @@ const Sidebar = ({ fullName, avatar, email }: Props) => {
     <aside className="sidebar">
       <Link href="/logo.png">
         <Image
-          src="/"
+          src="/logo.png"
           alt="logo"
           width={160}
           height={50}
-          className="hidden h-auto lg:block"
+          className="hidden h-aut lg:ml-2 lg:block"
         />
 
         <Image
-          src="/logo.png"
+          src="/small-logo.png"
           alt="logo"
           width={52}
           height={52}

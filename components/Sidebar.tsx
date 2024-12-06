@@ -35,7 +35,7 @@ const Sidebar = ({ fullName, avatar, email }: Props) => {
   
   return (
     <aside className="sidebar">
-      <Link href="/logo.png">
+      <Link href="/">
         <Image
           src="/logo.png"
           alt="logo"

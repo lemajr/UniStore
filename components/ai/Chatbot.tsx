@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -15,14 +15,20 @@ import { AnimatePresence } from "framer-motion"
 
 export default function ChatPage() {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [showChatIcon, setShowChatIcon] = useState(false);
-  const chatIconRef = useRef<HTMLButtonElement>(null);
 
   const { messages, input, handleInputChange, handleSubmit, isLoading, stop, reload, error} = useChat({api: "api/gemini"})
+
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const toggleChat = () => {
     setIsChatOpen((prev) => !prev);
   };
+
+useEffect(() =>{
+  if (scrollRef.current) {
+    scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+  }
+}, [messages]);
 
   return (
 
@@ -63,9 +69,58 @@ export default function ChatPage() {
             </CardHeader>
             <CardContent > 
               <ScrollArea className="h-[300px] pr-4">
+                { messages?.length === 0 && (
+
                <div className="w-full mt-32 text-gray-500 items-center justify-center flex gap-3">
                 No message yet.
                </div>
+                )}
+                { messages?.map((message, index) => (
+                  <div
+                  key={index}
+                  className={`mb-4 ${message.role ==="user" ? "text-right": "text-left"}`}
+                  >
+                  
+                  <div className={`inline-block p-3 rounded-lg ${message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+                        <ReactMarkdown children={ message.content } remarkPlugins={[remarkGfm]}
+                        components={{ code({ node, inline, className, children, ...props }: any) {
+                          return inline ? (
+                            <code {...props} className={`bg-gray-200 px-1 rounded-full`}>{children}</code>
+                          ): (
+                            <pre {...props} className={`bg-gray-200 p-2 rounded`}>{children}</pre>
+                          );
+                        }, 
+                        
+                          ul: ({ children }) => ( 
+                            <ul className="list-disc ml-4">
+                              {children}
+                            </ul>
+                          ),
+                          ol: ({ children }) => (
+                            <ol className="list-decimal ml-4">
+                              {children}
+                            </ol>
+                          ),
+                        }} />
+                 </div>
+
+
+
+                  </div>
+                ))}
+                {isLoading && (
+                  <div className="w-full items-center flex justify-center gap-3">
+                    <Loader2 className="animate-spin h-5 w-5 text-primary"/>
+                      <button className="underline text-gray-900" type="button" onClick={() => stop()}> Stop</button>
+                  </div>
+                )}
+                 {error && (
+                  <div className="w-full items-center flex justify-center gap-3">
+                    <div>An error occurred.</div>
+                    <button className="underline" type="button" onClick={() => reload()}>Retry</button>
+                  </div>
+                )}
+                <div ref={scrollRef}></div>
               </ScrollArea>
               </CardContent>
               <CardFooter>

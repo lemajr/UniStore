@@ -20,6 +20,7 @@ export async function POST(req: Request) {
 
     const result = await model.generateContentStream(prompt);
 
+
     const encoder = new TextEncoder();
     const readableStream = new ReadableStream({
       async start(controller) {

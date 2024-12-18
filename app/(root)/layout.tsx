@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import { getCurrentUser } from "@/lib/actions/user.actions";
 import { redirect } from "next/navigation";
 import { Toaster } from "@/components/ui/toaster";
+import ChatPage from "@/components/ai/Chatbot";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
       </section>
 
       <Toaster />
+      <ChatPage />
     </main>
   );
 };

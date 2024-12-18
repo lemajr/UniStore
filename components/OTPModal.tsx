@@ -32,20 +32,23 @@ const OtpModal = ({
   const [isOpen, setIsOpen] = useState(true);
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
-
-    console.log({ accountId, password });
+    setErrorMessage(""); 
 
     try {
       const sessionId = await verifySecret({ accountId, password });
 
-      console.log({ sessionId });
-
-      if (sessionId) router.push("/");
+      if (sessionId) {
+        router.push("/");
+      } else {
+        setErrorMessage("Invalid OTP. Please try again."); 
+      }
     } catch (error) {
+      setErrorMessage("OTP expired or invalid. Please request a new one.");
       console.log("Failed to verify OTP", error);
     }
 
@@ -54,6 +57,7 @@ const OtpModal = ({
 
   const handleResendOtp = async () => {
     await sendEmailOTP({ email });
+    setErrorMessage(""); 
   };
 
   return (
@@ -87,6 +91,10 @@ const OtpModal = ({
             <InputOTPSlot index={5} className="shad-otp-slot" />
           </InputOTPGroup>
         </InputOTP>
+
+        {errorMessage && (
+          <div className="text-center text-rose-500">{errorMessage}</div>
+        )}
 
         <AlertDialogFooter>
           <div className="flex w-full flex-col gap-4">
